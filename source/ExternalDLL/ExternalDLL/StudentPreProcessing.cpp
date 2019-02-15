@@ -1,6 +1,5 @@
 #include "StudentPreProcessing.h"
 
-
 IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &image) const {
 	return new IntensityImageStudent(image);
 }

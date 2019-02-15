@@ -1,75 +1,82 @@
 #include "IntensityImageStudent.h"
+#include <functional>
+#include <algorithm>  
+#include <vector>
 
-IntensityImageStudent::IntensityImageStudent() : IntensityImage() {
-	int throwError = 0, e = 1 / throwError; //Throws error without the need to include a header
-	//TODO: Nothing
+IntensityImageStudent::IntensityImageStudent() : IntensityImage() {}
+IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other) : IntensityImage(other.getWidth(), other.getHeight()) {}
+IntensityImageStudent::IntensityImageStudent(const int width,  const int height) : IntensityImage(width, height) {}
+IntensityImageStudent::IntensityImageStudent(const RGBImage & image)
+{
+	int h = image.getHeight();
+	int w = image.getWidth();
+	set(w, h);
+
+
+	for (int x = 0; x < w; x++) {
+		for (int y = 0; y < h; y++) {
+			setPixel(x, y, image.getPixel(x, y));
+		}
+	}
 }
 
-IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other) : IntensityImage(other.getWidth(), other.getHeight()) {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: Create a copy from the other object
-}
-
-IntensityImageStudent::IntensityImageStudent(const int width, const int height) : IntensityImage(width, height) {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: Initialize pixel storage
-}
-
-IntensityImageStudent::~IntensityImageStudent() {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: delete allocated objects
-}
+IntensityImageStudent::~IntensityImageStudent() {}
 
 void IntensityImageStudent::set(const int width, const int height) {
 	IntensityImage::set(width, height);
-	int throwError = 0, e = 1 / throwError;
-	//TODO: resize or create a new pixel storage (Don't forget to delete the old storage)
 }
 
 void IntensityImageStudent::set(const IntensityImageStudent &other) {
 	IntensityImage::set(other.getWidth(), other.getHeight());
-	int throwError = 0, e = 1 / throwError;
-	//TODO: resize or create a new pixel storage and copy the object (Don't forget to delete the old storage)
+}
+
+int IntensityImageStudent::getPosition(int x, int y) const{
+	// TODO: bitshifting SHOULD faster
+	return (x << 8) + y;
+}
+
+Intensity RGBtoIntensity(RGB pixel) {
+
+
+	//return Intensity((pixel.r * 0.2126 + pixel.g * 0.7152 + pixel.b * 0.0722)); // ITU-R BT-709
+	//return Intensity((pixel.r * 0.299 + pixel.g * 0.587 + pixel.b * 0.114)); // ITU-R BT-601 
+	//return Intensity((pixel.r * 0.3 + pixel.g * 0.59 + pixel.b * 0.11)); // GIMP, Photoshop
+
+	//std::vector<int> colors = { pixel.r, pixel.g, pixel.b };
+
+
+	//return Intensity(colors. + std::min(pixel.r, pixel.g, pixel.b)); // Desaturation
+
+
+	//return Intensity(pixel.r);
+	//return Intensity(pixel.g);
+	//return Intensity(pixel.b);
+
+
+	//return Intensity((pixel.r + pixel.g + pixel.b) / 3); // average
+
+	return Intensity((pixel.r * 0.3) + (pixel.g * 0.59) + (pixel.b * 0.11));;
+}
+
+void IntensityImageStudent::setPixel(int x, int y, RGB pixel){
+	setPixel(getPosition(x, y), RGBtoIntensity(pixel));
 }
 
 void IntensityImageStudent::setPixel(int x, int y, Intensity pixel) {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: no comment needed :)
+	pixels[getPosition(x, y)] = pixel;
 }
 
 void IntensityImageStudent::setPixel(int i, Intensity pixel) {
-	int throwError = 0, e = 1 / throwError;
-	/*
-	* TODO: set pixel i in "Row-Major Order"
-	*
-	*
-	* Original 2d image (values):
-	* 9 1 2
-	* 4 3 5
-	* 8 7 8
-	*
-	* 1d representation (i, value):
-	* i		value
-	* 0		9
-	* 1		1
-	* 2		2
-	* 3		4
-	* 4		3
-	* 5		5
-	* 6		8
-	* 7		7
-	* 8		8
-	*/
+	int rows = i / getWidth();
+	int colums = i % getWidth();
+
+	setPixel(rows, colums);
 }
 
 Intensity IntensityImageStudent::getPixel(int x, int y) const {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: no comment needed :)
-	return 0;
+	return getPixel(getPosition(x, y));
 }
 
 Intensity IntensityImageStudent::getPixel(int i) const {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: see setPixel(int i, RGB pixel)
-	return 0;
+	return pixels.at(i);
 }
