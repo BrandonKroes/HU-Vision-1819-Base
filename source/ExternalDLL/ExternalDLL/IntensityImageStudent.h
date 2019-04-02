@@ -6,16 +6,24 @@
 
 #pragma once
 #include "IntensityImage.h"
+#include "RGBImageStudent.h"
+#include <unordered_map>
 class IntensityImageStudent : public IntensityImage {
+private:
+	std::unordered_map<int, Intensity> pixels;
 public:
 	IntensityImageStudent();
 	IntensityImageStudent(const IntensityImageStudent &other);
 	IntensityImageStudent(const int width, const int height);
+	IntensityImageStudent(const RGBImage & image);
 	~IntensityImageStudent();
 
 	void set(const int width, const int height);
 	void set(const IntensityImageStudent &other);
 
+	int getPosition(int x, int y) const;
+
+	void setPixel(int x, int y, RGB pixel);
 	void setPixel(int x, int y, Intensity pixel);
 	void setPixel(int i, Intensity pixel);
 
